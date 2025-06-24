@@ -301,30 +301,6 @@ allure serve allure-results
 - You can also generate static HTML with `allure generate allure-results -o allure-report` and open the HTML files manually.
 - For more options, see the [Allure documentation](https://docs.qameta.io/allure/).
 
-## Linting and Code Quality
-
-This project enforces code quality and style using [flake8](https://flake8.pycqa.org/) and [flake8-docstrings](https://pypi.org/project/flake8-docstrings/).
-
-### How to Run Lint Checks
-Before running any tests, ensure your code passes lint checks:
-
-```bash
-flake8 .
-```
-
-- This will check all Python files in the project for style, formatting, and docstring compliance.
-- Any issues or deviations will be reported in the terminal output.
-
-### Enforcement
-- **All code must pass lint checks before tests are executed.**
-- If lint errors are found, they must be fixed before proceeding with test execution.
-- Developers who push or commit code that does not pass linting will be reported in the CI/CD process or by team review.
-
-### Recommended Workflow
-1. Write or update your code.
-2. Run `flake8 .` and fix any issues.
-3. Only then run your tests or push code.
-
 ## Credits
 
 - Developed and assisted using the [Cursor](https://www.cursor.so/) platform for AI-powered coding.

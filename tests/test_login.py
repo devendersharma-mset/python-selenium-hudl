@@ -4,6 +4,7 @@ from selenium.webdriver.chrome.options import Options
 from pages.login_page import LoginPage
 from utils.config import HUDL_USERNAME, HUDL_PASSWORD
 
+
 @pytest.fixture
 def driver():
     """
@@ -12,12 +13,13 @@ def driver():
         WebDriver: Selenium WebDriver instance.
     """
     options = Options()
-    options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
     driver = webdriver.Chrome(options=options)
     yield driver
     driver.quit()
+
 
 # Add this marker to re-run failed tests up to 2 times
 def pytestmark():
@@ -26,6 +28,7 @@ def pytestmark():
     """
     return pytest.mark.flaky(reruns=2, reruns_delay=1)
 
+
 def test_valid_login(driver):
     """
     Test a valid login scenario. Asserts that login is successful with correct credentials.
@@ -33,13 +36,16 @@ def test_valid_login(driver):
         driver: Selenium WebDriver fixture.
     """
     if not HUDL_USERNAME or not HUDL_PASSWORD:
-        pytest.skip("HUDL_USERNAME and HUDL_PASSWORD must be set as environment variables.")
+        pytest.skip(
+            "HUDL_USERNAME and HUDL_PASSWORD must be set as environment variables."
+        )
     page = LoginPage(driver)
     page.load()
     page.enter_email(HUDL_USERNAME)
     page.enter_password(HUDL_PASSWORD)
     page.submit()
     assert page.is_login_successful()
+
 
 def test_invalid_login(driver):
     """
@@ -53,6 +59,7 @@ def test_invalid_login(driver):
     page.enter_password("wrong_password")
     page.submit()
     assert "Invalid" in page.get_error_message()
+
 
 def test_missing_password(driver):
     """

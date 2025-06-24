@@ -1,10 +1,12 @@
 from selenium.webdriver.common.by import By
 
+
 class LoginPage:
     """
     Page Object Model for the Hudl login page.
     Provides methods to interact with the login form and validate login results.
     """
+
     URL = "https://www.hudl.com/login"
 
     def __init__(self, driver):
@@ -57,4 +59,6 @@ class LoginPage:
         Returns:
             bool: True if login is successful, False otherwise.
         """
-        return "dashboard" in self.driver.current_url or "home" in self.driver.current_url
+        return (
+            "dashboard" in self.driver.current_url or "home" in self.driver.current_url
+        )

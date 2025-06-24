@@ -23,20 +23,20 @@ def get_webdriver(browser_name: str):
         ValueError: If the browser is not supported.
     """
     browser_name = browser_name.lower()
-    if browser_name == 'chrome':
+    if browser_name == "chrome":
         options = ChromeOptions()
-        if os.getenv('HEADLESS', 'false').lower() == 'true':
-            options.add_argument('--headless')
+        if os.getenv("HEADLESS", "false").lower() == "true":
+            options.add_argument("--headless")
         return webdriver.Chrome(service=ChromeService(), options=options)
-    elif browser_name == 'firefox':
+    elif browser_name == "firefox":
         options = FirefoxOptions()
-        if os.getenv('HEADLESS', 'false').lower() == 'true':
-            options.add_argument('--headless')
+        if os.getenv("HEADLESS", "false").lower() == "true":
+            options.add_argument("--headless")
         return webdriver.Firefox(service=FirefoxService(), options=options)
-    elif browser_name == 'edge':
+    elif browser_name == "edge":
         options = EdgeOptions()
-        if os.getenv('HEADLESS', 'false').lower() == 'true':
-            options.add_argument('--headless')
+        if os.getenv("HEADLESS", "false").lower() == "true":
+            options.add_argument("--headless")
         return webdriver.Edge(service=EdgeService(), options=options)
     else:
         raise ValueError(f"Unsupported browser: {browser_name}")
@@ -53,7 +53,7 @@ def pytest_addoption(parser):
         "--browser",
         action="store",
         default="chrome",
-        help="Browser to use for tests: chrome, firefox, edge"
+        help="Browser to use for tests: chrome, firefox, edge",
     )
 
 
@@ -71,4 +71,4 @@ def driver(request):
     browser = request.config.getoption("--browser")
     driver = get_webdriver(browser)
     yield driver
-    driver.quit() 
+    driver.quit()
