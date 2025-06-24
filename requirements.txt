@@ -1,0 +1,8 @@
+selenium
+pytest
+pytest-rerunfailures
+pytest-html
+pdoc3
+allure-pytest
+flake8
+flake8-docstrings
