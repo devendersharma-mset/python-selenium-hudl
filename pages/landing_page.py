@@ -20,6 +20,8 @@ class LandingPage(BasePage):
     def navigate_to_login(self):
         """
         Navigate to the login page by clicking the login selectors, waiting for each element.
+        Waits for the login select and Hudl login buttons to be clickable, then clicks them.
+        Waits for the custom logo to appear as confirmation of navigation.
         """
         self.wait_for_element(By.CSS_SELECTOR, "[data-qa-id='login-select']", condition=EC.element_to_be_clickable).click()
         self.wait_for_element(By.CSS_SELECTOR, "[data-qa-id='login-hudl']", condition=EC.element_to_be_clickable).click()

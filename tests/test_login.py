@@ -17,7 +17,11 @@ HUDL_PASSWORD = os.getenv("HUDL_PASSWORD")
 
 def test_valid_login(driver):
     """
-    Test a valid login scenario from landing to home page.
+    Test a valid login scenario:
+    - Loads the landing page
+    - Navigates to the login page
+    - Enters valid credentials
+    - Verifies successful navigation to the home page
     """
     if not HUDL_USERNAME or not HUDL_PASSWORD:
         pytest.skip("HUDL_USERNAME and HUDL_PASSWORD must be set in the .env file.")
@@ -38,6 +42,13 @@ def test_valid_login(driver):
 
 
 def test_invalid_email_format(driver):
+    """
+    Test login with an invalid email format:
+    - Loads the landing page
+    - Navigates to the login page
+    - Enters an invalid email format
+    - Verifies the correct error message is displayed for the username field
+    """
     landing = LandingPage(driver)
     landing.load()
     landing.navigate_to_login()
@@ -48,6 +59,13 @@ def test_invalid_email_format(driver):
     assert "Enter a valid email." in login.get_username_error_message()
 
 def test_invalid_username_or_password(driver):
+    """
+    Test login with invalid username or password:
+    - Loads the landing page
+    - Navigates to the login page
+    - Enters an invalid email and password
+    - Verifies the correct error message is displayed for the password field
+    """
     landing = LandingPage(driver)
     landing.load()
     landing.navigate_to_login()
