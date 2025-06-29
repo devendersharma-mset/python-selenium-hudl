@@ -1,0 +1,7 @@
+selenium
+pytest
+pytest-rerunfailures
+pytest-html
+pdoc3
+allure-pytest
+python-dotenv
