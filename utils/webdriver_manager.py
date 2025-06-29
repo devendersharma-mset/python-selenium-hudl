@@ -25,17 +25,20 @@ def get_webdriver(browser_name: str):
     browser_name = browser_name.lower()
     if browser_name == "chrome":
         options = ChromeOptions()
-        if os.getenv("HEADLESS", "false").lower() == "true":
+        # Default to headless mode, can be disabled by setting HEADLESS=false
+        if os.getenv("HEADLESS", "true").lower() != "false":
             options.add_argument("--headless")
         return webdriver.Chrome(service=ChromeService(), options=options)
     elif browser_name == "firefox":
         options = FirefoxOptions()
-        if os.getenv("HEADLESS", "false").lower() == "true":
+        # Default to headless mode, can be disabled by setting HEADLESS=false
+        if os.getenv("HEADLESS", "true").lower() != "false":
             options.add_argument("--headless")
         return webdriver.Firefox(service=FirefoxService(), options=options)
     elif browser_name == "edge":
         options = EdgeOptions()
-        if os.getenv("HEADLESS", "false").lower() == "true":
+        # Default to headless mode, can be disabled by setting HEADLESS=false
+        if os.getenv("HEADLESS", "true").lower() != "false":
             options.add_argument("--headless")
         return webdriver.Edge(service=EdgeService(), options=options)
     else:

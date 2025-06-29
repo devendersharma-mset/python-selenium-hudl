@@ -13,6 +13,7 @@ This script will:
 - Install all Python dependencies from requirements.txt
 - Check for Java (JRE) and attempt to auto-install it if missing
 - Check for the Allure commandline and attempt to auto-install it if missing
+- Check for Docker and attempt to auto-install it if missing
 - Auto-install Homebrew (macOS) or Scoop (Windows) if needed for dependency installation
 - Provide clear output and fallback/manual instructions if automation is not possible
 - Ensure your environment is ready for running tests and generating reports
@@ -25,9 +26,11 @@ This project contains automated tests for the Hudl login functionality using Pyt
 - Page Object Model (POM)
 - Valid and invalid login tests
 - Pytest fixtures for driver management
+- **Headless mode by default** (faster execution, CI/CD friendly)
 - Dockerized test execution
 - Parallel test execution across browsers
 - Automatic rerun of failed tests
+- Cross-browser support (Chrome, Firefox, Edge)
 
 ## Setup
 
@@ -44,6 +47,37 @@ pytest
 docker build -t hudl-tests .
 docker run --rm hudl-tests
 ```
+
+### Docker Installation
+
+If Docker is not installed, the `setup.sh` script will attempt to install it automatically. For manual installation:
+
+#### macOS
+```bash
+# Using Homebrew (recommended)
+brew install --cask docker
+
+# Or download Docker Desktop from:
+# https://www.docker.com/products/docker-desktop
+```
+
+#### Windows
+- Download Docker Desktop from: https://www.docker.com/products/docker-desktop
+- Install and restart your terminal
+
+#### Linux
+```bash
+# Ubuntu/Debian
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo usermod -aG docker $USER
+
+# Or use package manager
+sudo apt-get update
+sudo apt-get install docker.io
+```
+
+**Note**: After Docker installation, you may need to restart your terminal or log out and back in for group changes to take effect.
 
 ## Folder Structure
 ```
@@ -72,6 +106,45 @@ This project supports running tests in parallel and across multiple browsers usi
 - edge
 
 You can configure the list of supported browsers in `utils/config.py`.
+
+### Headless Mode Configuration
+
+By default, tests run in **headless mode** (no browser window visible). This is ideal for:
+- CI/CD pipelines
+- Faster test execution
+- Running tests in environments without display
+- Reduced resource usage
+- Consistent behavior across environments
+
+**To disable headless mode** (show browser window):
+```bash
+HEADLESS=false pytest
+```
+
+**To explicitly enable headless mode**:
+```bash
+HEADLESS=true pytest
+```
+
+**Headless mode with different browsers**:
+```bash
+# Chrome in headless mode (default)
+pytest --browser=chrome
+
+# Firefox in headless mode (default)
+pytest --browser=firefox
+
+# Edge in headless mode (default)
+pytest --browser=edge
+
+# Show browser window for debugging
+HEADLESS=false pytest --browser=chrome
+```
+
+**Note**: 
+- Headless mode works with all supported browsers (Chrome, Firefox, Edge)
+- Headless mode is automatically enabled in Docker environments
+- For debugging test failures, consider running with `HEADLESS=false` to see the browser interactions
 
 ### 1. Run Tests in Parallel on a Single Browser
 To run tests in parallel (e.g., 4 workers) on a single browser (e.g., Chrome):
