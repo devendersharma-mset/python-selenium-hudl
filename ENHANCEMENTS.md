@@ -49,6 +49,9 @@ This document lists potential enhancements and best practices to further improve
 - **Interactive CLI:** Build a simple CLI (using `argparse` or `click`) to run tests, generate reports, and manage configs.
 - **Test Tagging & Filtering:** Allow running tests by tags, user stories, or requirements.
 
+## 11. Dockerfile and Docker-based test execution
+- Dockerfile and Docker-based test execution are possible enhancements, but are not included in the current implementation.
+
 ---
 
 **Prioritization Suggestions:**

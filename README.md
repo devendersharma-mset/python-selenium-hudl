@@ -13,7 +13,6 @@ This script will:
 - Install all Python dependencies from requirements.txt
 - Check for Java (JRE) and attempt to auto-install it if missing
 - Check for the Allure commandline and attempt to auto-install it if missing
-- Check for Docker and attempt to auto-install it if missing
 - Auto-install Homebrew (macOS) or Scoop (Windows) if needed for dependency installation
 - Provide clear output and fallback/manual instructions if automation is not possible
 - Ensure your environment is ready for running tests and generating reports
@@ -27,7 +26,6 @@ This project contains automated tests for the Hudl login functionality using Pyt
 - Valid and invalid login tests
 - Pytest fixtures for driver management
 - **Headless mode by default** (faster execution, CI/CD friendly)
-- Dockerized test execution
 - Parallel test execution across browsers
 - Automatic rerun of failed tests
 - Cross-browser support (Chrome, Firefox, Edge)
@@ -42,48 +40,10 @@ pip install -r requirements.txt
 pytest
 ```
 
-### Using Docker
-```bash
-docker build -t hudl-tests .
-docker run --rm hudl-tests
-```
-
-### Docker Installation
-
-If Docker is not installed, the `setup.sh` script will attempt to install it automatically. For manual installation:
-
-#### macOS
-```bash
-# Using Homebrew (recommended)
-brew install --cask docker
-
-# Or download Docker Desktop from:
-# https://www.docker.com/products/docker-desktop
-```
-
-#### Windows
-- Download Docker Desktop from: https://www.docker.com/products/docker-desktop
-- Install and restart your terminal
-
-#### Linux
-```bash
-# Ubuntu/Debian
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
-sudo usermod -aG docker $USER
-
-# Or use package manager
-sudo apt-get update
-sudo apt-get install docker.io
-```
-
-**Note**: After Docker installation, you may need to restart your terminal or log out and back in for group changes to take effect.
-
 ## Folder Structure
 ```
 .
 ├── .gitignore
-├── Dockerfile
 ├── pages/
 │   └── login_page.py
 ├── pytest.ini
@@ -143,7 +103,6 @@ HEADLESS=false pytest --browser=chrome
 
 **Note**: 
 - Headless mode works with all supported browsers (Chrome, Firefox, Edge)
-- Headless mode is automatically enabled in Docker environments
 - For debugging test failures, consider running with `HEADLESS=false` to see the browser interactions
 
 ### 1. Run Tests in Parallel on a Single Browser
@@ -187,20 +146,13 @@ pytest -n 4
 ```
 Each test will run in parallel on all supported browsers.
 
-### 3. Running in Docker
-The same commands work inside Docker, as long as the necessary browser drivers are installed in the image.
-
-### 4. Automatic Rerun of Failed Tests
+### 3. Automatic Rerun of Failed Tests
 This project uses `pytest-rerunfailures` and a `pytest.ini` config to automatically rerun failed tests up to 2 times with a 1-second delay:
 
 ```
 [pytest]
 addopts = --reruns 2 --reruns-delay 1
 ```
-
-No extra configuration is needed—this applies to all test runs, locally and in Docker.
-
----
 
 If you need more advanced parallelization or browser grid support, consider using Selenium Grid or cloud services like BrowserStack or Sauce Labs.
 
@@ -217,17 +169,6 @@ pytest --html=report.html --self-contained-html
 - The report will be saved as `report.html` in your project directory.
 - Open `report.html` in your browser to view the results.
 
-### Run in Docker with HTML Report
-To generate and access the report when running in Docker:
-
-1. **Run the container and mount a local directory for the report:**
-   ```bash
-   docker run --rm -v $(pwd):/workspace hudl-tests pytest --html=/workspace/report.html --self-contained-html
-   ```
-   - This mounts your current directory into the container and writes the report to your local machine.
-
-2. **Open `report.html` on your host machine after the run.**
-
 ## Generating Automatic Documentation
 
 This project uses [pdoc3](https://pdoc3.github.io/pdoc/) to generate API documentation from Python docstrings.
@@ -240,14 +181,6 @@ pdoc --html pages utils tests --output-dir docs
 ```
 - The documentation will be generated in the `docs/` directory.
 - Open the generated HTML files in your browser to view the documentation.
-
-### Generate Documentation in Docker
-To generate documentation inside Docker and copy it to your host:
-
-```bash
-docker run --rm -v $(pwd):/workspace hudl-tests pdoc --html pages utils tests --output-dir /workspace/docs
-```
-- The `docs/` directory will appear in your project root on your host machine.
 
 ### Notes
 - Ensure all classes and methods are well-commented with docstrings for best results.
@@ -266,9 +199,6 @@ flowchart TD
     A -->|"Imports config"| E["utils/config.py\nConfig (URL, Browsers)"]
     A -->|"Generates"| F["report.html\nHTML Test Report"]
     A -->|"Generates"| G["docs/\nAPI Documentation\n(pdoc3)"]
-    subgraph Docker
-        H["Dockerfile"]
-    end
     H -->|"Runs"| A
     H -->|"Runs"| F
     H -->|"Runs"| G
@@ -290,7 +220,6 @@ flowchart TD
 - **selenium.webdriver**: The Selenium API used by both page objects and WebDriver manager.
 - **report.html**: HTML test report generated by pytest-html.
 - **docs/**: Auto-generated API documentation from code comments using pdoc3.
-- **Dockerfile**: Enables running tests, generating reports, and documentation in a containerized environment.
 
 ## Generating Allure Reports
 
@@ -357,17 +286,6 @@ After running tests, generate and open the report:
 allure serve allure-results
 ```
 - This will start a local server and open the interactive report in your browser.
-
-### 4. Using Allure in Docker
-To generate Allure results in Docker and view them on your host:
-
-```bash
-docker run --rm -v $(pwd):/workspace hudl-tests pytest --alluredir=/workspace/allure-results
-```
-Then, on your host machine (with Allure installed):
-```bash
-allure serve allure-results
-```
 
 ### Notes
 - The `allure-results` directory will contain the raw results after test execution.

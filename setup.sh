@@ -88,38 +88,6 @@ else
   echo "[OK] Allure commandline is installed."
 fi
 
-# Check Docker
-if ! command -v docker &> /dev/null; then
-  echo "Docker is not installed. Attempting to install..."
-  if [[ "$OS" == "Darwin" ]]; then
-    if ! command -v brew &> /dev/null; then
-      echo "Homebrew not found. Installing Homebrew..."
-      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-      eval "$($(brew --prefix)/bin/brew shellenv)"
-    fi
-    echo "Installing Docker Desktop via Homebrew..."
-    brew install --cask docker
-    echo "Docker Desktop installed. Please start Docker Desktop from Applications folder."
-    echo "After starting Docker Desktop, you may need to restart your terminal."
-  elif [[ "$OS" == "Linux" ]]; then
-    echo "Installing Docker on Linux..."
-    curl -fsSL https://get.docker.com -o get-docker.sh
-    sudo sh get-docker.sh
-    sudo usermod -aG docker $USER
-    rm get-docker.sh
-    echo "Docker installed. You may need to log out and back in for group changes to take effect."
-  elif [[ "$OS" =~ MINGW|MSYS|CYGWIN ]]; then
-    echo "For Windows, please install Docker Desktop manually:"
-    echo "https://www.docker.com/products/docker-desktop"
-    echo "After installation, restart your terminal."
-  else
-    echo "Unknown OS. Please install Docker manually:"
-    echo "https://www.docker.com/products/docker-desktop"
-  fi
-else
-  echo "[OK] Docker is installed."
-fi
-
 echo ""
 echo "=== Setup Complete! ==="
 echo ""
@@ -141,10 +109,6 @@ echo ""
 echo "5. Generate Allure report:"
 echo "   pytest --alluredir=allure-results"
 echo "   allure serve allure-results"
-echo ""
-echo "6. Run in Docker (if Docker is installed and running):"
-echo "   docker build -t hudl-tests ."
-echo "   docker run --rm hudl-tests"
 echo ""
 echo "=== Headless Mode ==="
 echo "• Tests run in headless mode by default (no browser window)"
