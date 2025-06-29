@@ -1,6 +1,8 @@
 import pytest
 import os
 from dotenv import load_dotenv
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from pages.landing_page import LandingPage
 from pages.login_page import LoginPage
 from pages.home_page import HomePage
@@ -15,53 +17,45 @@ HUDL_PASSWORD = os.getenv("HUDL_PASSWORD")
 
 def test_valid_login(driver):
     """
-    Test a valid login scenario. Asserts that login is successful with correct credentials.
-    Args:
-        driver: Selenium WebDriver fixture.
+    Test a valid login scenario from landing to home page.
     """
     if not HUDL_USERNAME or not HUDL_PASSWORD:
-        pytest.skip(
-            "HUDL_USERNAME and HUDL_PASSWORD must be set in the .env file."
-        )
-    page = LandingPage(driver)
-    page.load()
-    page.navigate_to_login()
-    page = LoginPage(driver)
-    page.load()
-    page.enter_email(HUDL_USERNAME)
-    page.click_continue_email()
-    page.enter_password(HUDL_PASSWORD)
-    page.click_continue_password()
-    page = HomePage(driver)
-    page.is_on_home_page()
+        pytest.skip("HUDL_USERNAME and HUDL_PASSWORD must be set in the .env file.")
 
-#
-# def test_invalid_login(driver):
-#     """
-#     Test an invalid login scenario. Asserts that an error message is shown for invalid credentials.
-#     Args:
-#         driver: Selenium WebDriver fixture.
-#     """
-#
-#     page = LoginPage(driver)
-#     page.load()
-#     page.enter_email("invalid_email@domain.com")
-#     page.enter_password("wrong_password")
-#     page.submit()
-#     assert "Invalid" in page.get_error_message()
-#
-#
-# def test_missing_password(driver):
-#     """
-#     Test login with a missing password. Asserts that the appropriate error message is shown.
-#     Args:
-#         driver: Selenium WebDriver fixture.
-#     """
-#     if not HUDL_USERNAME:
-#         pytest.skip("HUDL_USERNAME must be set in the .env file.")
-#     page = LoginPage(driver)
-#     page.load()
-#     page.enter_email(HUDL_USERNAME)
-#     page.enter_password("")
-#     page.submit()
-#     assert "Please enter your password" in page.get_error_message()
+    landing = LandingPage(driver)
+    landing.load()
+    landing.navigate_to_login()
+
+    login = LoginPage(driver)
+    login.enter_email(HUDL_USERNAME)
+    login.click_continue_email()
+    login.enter_password(HUDL_PASSWORD)
+    login.click_continue_password()
+
+    # Wait for the URL to contain 'home' after login
+    home = HomePage(driver)
+    home.verify_is_on_home_page()
+
+
+def test_invalid_email_format(driver):
+    landing = LandingPage(driver)
+    landing.load()
+    landing.navigate_to_login()
+
+    login = LoginPage(driver)
+    login.enter_email("invalid_email")
+    login.click_continue_email()
+    assert "Enter a valid email." in login.get_username_error_message()
+
+def test_invalid_username_or_password(driver):
+    landing = LandingPage(driver)
+    landing.load()
+    landing.navigate_to_login()
+
+    login = LoginPage(driver)
+    login.enter_email("invalid_email@gmail.com")
+    login.click_continue_email()
+    login.enter_password('abc123456!')
+    login.click_continue_password()
+
+    assert "Incorrect username or password." in login.get_password_error_message()
