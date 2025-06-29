@@ -301,6 +301,23 @@ allure serve allure-results
 - You can also generate static HTML with `allure generate allure-results -o allure-report` and open the HTML files manually.
 - For more options, see the [Allure documentation](https://docs.qameta.io/allure/).
 
+## Credentials Setup
+
+This project uses a `.env` file to securely store your Hudl credentials. **Do not commit your real credentials to version control.**
+
+1. Copy the provided `.env.example` file to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+2. Open `.env` and fill in your Hudl username and password:
+   ```env
+   HUDL_USERNAME=your_username_here
+   HUDL_PASSWORD=your_password_here
+   ```
+3. Your credentials will now be loaded automatically when running tests.
+
+> **Note:** The `.env.example` file is a template and safe to commit. Never commit your real `.env` file.
+
 ## Credits
 
 - Developed and assisted using the [Cursor](https://www.cursor.so/) platform for AI-powered coding.
